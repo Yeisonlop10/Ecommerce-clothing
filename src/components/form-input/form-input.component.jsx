@@ -4,7 +4,7 @@ import './form-input.styles.scss';
 
 const FormInput = ({ handleChange, label, ...otherProps }) => (
     <div className='group'>
-    <input className='form-input' onchange={handleChange}{...otherProps}/>
+    <input className='form-input' onChange={handleChange}{...otherProps}/>
     {
         label ? 
         // This means that it always has the class, but if user types, we add the shrink property
