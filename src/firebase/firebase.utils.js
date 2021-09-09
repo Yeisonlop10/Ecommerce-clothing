@@ -12,6 +12,36 @@ const config = {
     measurementId: "G-YPYH79FR3V"
   };
 
+  // We will store our user inside the database. We get back: userAuth and 'additionalData' that is an object
+  export const createUserProfileDocument = async (userAuth, additionalData) => {
+    if(!userAuth) return;
+    // If there is user, check if user already exists
+    const userRef = firestore.doc(`user/${userAuth.uid}`);
+
+    // Firebase returns a snapshot too
+    const snapshot = await userRef.get();
+
+    // If the user doesn't exist in db
+    if(!snapshot.exists){
+        // Create it
+        const { displayName, email } = userAuth;
+        const createdAt = new Date();
+        //
+        try{
+            await userRef.set({
+                displayName,
+            email,
+            createdAt,
+            ...additionalData
+            })
+        }catch(error){
+            console.log('error creating user', error.message)
+        }
+    }
+
+    return userRef;
+  }
+
 firebase.initializeApp(config);
 
 export const auth = firebase.auth(); // export anything related to authentication
