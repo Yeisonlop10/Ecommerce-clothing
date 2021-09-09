@@ -4,7 +4,7 @@ import FormInput from '../form-input/form-input.component';
 import CustomButton from '../custom-button/custom-button.component';
 
 // Import firebase sign in with Google. This is configured in firebase.utils.js
-import { signInWithGoogle } from '../../firebase/firebase.utils.js';  
+import { auth, signInWithGoogle } from '../../firebase/firebase.utils.js';  
 
 import './sign-in.styles.scss';
 
@@ -18,12 +18,21 @@ class SignIn extends React.Component {
         }
     }
 
-    handleSubmit = (e) => {
-        e.preventDefault();
-        this.setState({
-            email: '',
-            password: '',
-        })
+    handleSubmit = async event => {
+        event.preventDefault();
+
+        const { email, password } = this.state;
+
+        try{
+            await auth.signInWithEmailAndPassword(email, password)
+
+            this.setState({
+                email: '',
+                password: '',
+            })
+        }catch(error){
+            console.error(error);
+        }
     }
 
     handleChange = (e) => {
